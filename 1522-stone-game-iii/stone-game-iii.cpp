@@ -1,10 +1,10 @@
 class Solution {
 public:
-    map<pair<int,int>,int> mp;
+    int dp[50001][2];
     int solve(int i,int turn,vector<int>& stoneValue){
         if(i>=stoneValue.size()) return false;
         int totscore;
-        if(mp.find({i,turn})!=mp.end()) return mp[{i,turn}];
+        if(dp[i][turn]!=0) return dp[i][turn];
         if(!turn){
                 totscore = INT_MIN;
                 int currscore =0;
@@ -14,7 +14,7 @@ public:
                         totscore  = max(currscore+solve(j+1,1,stoneValue),totscore);
                     }
                 }
-                return mp[{i,turn}] = totscore;
+                return dp[i][turn] = totscore;
         }
         if(turn){
             totscore = INT_MAX;
@@ -25,13 +25,13 @@ public:
                         totscore  = min(-currscore+solve(j+1,0,stoneValue),totscore);
                     }
                 }
-                return mp[{i,turn}] = totscore;
+                return dp[i][turn] = totscore;
         }
         return 0;
     }
     string stoneGameIII(vector<int>& stoneValue) {
         int score = solve(0,0,stoneValue);
-      //  memset(dp,-1,sizeof(dp));
+       memset(dp,0,sizeof(dp));
         if(score>0) return "Alice";
         else if(score<0) return "Bob";
         return "Tie";
