@@ -1,5 +1,6 @@
 class Solution {
 public:
+// KHUD KARNA BAKI HAI BHAI
     vector<string> fullJustify(vector<string>& words, int maxWidth) {
         vector<string>res;
         int n=words.size();
