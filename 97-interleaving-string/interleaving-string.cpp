@@ -2,6 +2,8 @@ class Solution {
 public:
     int dp[101][101];
     bool solve(int i,int j,string& s1,string& s2,string& s3){
+        ios_base::sync_with_stdio(false);
+        cin.tie(NULL);
         if(i+j==s3.size()) return true;
         if(dp[i][j]!=-1) return dp[i][j];
         bool ans = false;
