@@ -10,6 +10,9 @@ public:
         int ans = INT_MAX;
         for(int k = 0;k<m;k++){
             ans = min(ans,solve(i+1,sum+mat[i][k],target,mat));
+            if(ans==0){
+                return 0;
+            }
         }
         return dp[i][sum] = ans;
     }
