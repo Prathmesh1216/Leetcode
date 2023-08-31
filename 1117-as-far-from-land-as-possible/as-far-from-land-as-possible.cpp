@@ -13,6 +13,8 @@ public:
                 }
             }
         }
+         int ans = 0;
+
         if(pq.empty()) return -1;
         if(pq.size()==n*m) return -1;
         int dr[] = {-1,0,1,0};
@@ -21,6 +23,7 @@ public:
             auto it  = pq.front();
             int r = it.first;
             int c = it.second;
+            ans = max(ans,dist[r][c]);
             pq.pop();
             for(int i = 0;i<4;i++){
                 int nr = r + dr[i];
@@ -29,13 +32,6 @@ public:
                     dist[nr][nc] = 1 + dist[r][c];
                     pq.push({nr,nc});
                 }
-            }
-        }
-
-        int ans = 0;
-        for(int i = 0;i<n;i++){
-            for(int j = 0;j<m;j++){
-                ans = max(ans,dist[i][j]);
             }
         }
         return ans;
