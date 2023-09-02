@@ -3,29 +3,22 @@ public:
     int n;
     int m;
     bool isValid(int mid,vector<int>& tasks,vector<int>& workers,int pills,int strength){
-        int cnt = 0;
-        bool flag = true;
-        multiset<int> st(workers.begin(),workers.end());
+         multiset<int> st(workers.begin(),workers.end());
         for(int i = mid-1;i>=0;i--){
-            auto it  = prev(st.end());
+            auto it  =st.end();
+            it--;
             if(tasks[i]<=*it) st.erase(it);
             else{
                 auto it = st.lower_bound(tasks[i]-strength);
-                if(it!=st.end()){
-                    cnt++;
+                if(it==st.end()) return false;
+                if(pills){
+                    pills--;
                     st.erase(it);
-                }
-                else{
-                    flag = false;
-                    break;
-                }
-            }
-            if(cnt>pills){
-                flag = false;
-                break;
+                } 
+                else return false;
             }
         }
-        return flag;
+        return true;
     }
     int maxTaskAssign(vector<int>& tasks, vector<int>& workers, int pills, int strength) {
         n = tasks.size();
