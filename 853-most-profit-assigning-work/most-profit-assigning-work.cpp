@@ -11,7 +11,7 @@ public:
             v.push_back({profit[i],difficulty[i]});
         }
         sort(v.begin(),v.end(),cmp);
-        sort(worker.begin(),worker.end(),greater<int>());
+        sort(worker.rbegin(),worker.rend());
         int i = 0;
         int j = 0;
         int m = worker.size();
