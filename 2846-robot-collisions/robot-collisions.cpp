@@ -12,13 +12,6 @@ public:
         stack<vector<int>> st;
         for(int i = 0;i<n;i++){
             vector<int> temp = v[i];
-            if(st.size()>0 && st.top()[2]==1 && temp[2]==0 && temp[1]<st.top()[1]){
-                vector<int> temp2 = st.top();
-                st.pop();
-                temp2[1]--;
-                if(temp2[1]>0) st.push(temp2);
-                continue;
-            }
             while(st.size()>0 && st.top()[2]==1 && temp[2]==0 && temp[1]>st.top()[1]){
                 st.pop();
                 temp[1]--;
