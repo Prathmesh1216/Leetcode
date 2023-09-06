@@ -5,7 +5,7 @@ public:
         for(int i = 0;i<nums.size();i++){
             if(nums[i]==1) c1++;
         }
-        if(c1==0) return 0;
+        if(c1==0 || c1==1) return 0;
         int i = 0;
         int j = 0;
         int c0 = 0;
