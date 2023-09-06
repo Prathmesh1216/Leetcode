@@ -1,53 +1,66 @@
 class Solution {
 public:
-    queue<pair<pair<int,int>,int>> q;
-    vector<int> dr = {-1,0,1,0};
-    vector<int> dc = {0,-1,0,1};
-    int n,m;
-    void dfs(int r,int c,vector<vector<int>>& grid,vector<vector<bool>>& vis){
-        vis[r][c] = 1;
-        q.push({{r,c},0});
-        for(int i = 0;i<4;i++){
-            int nr = r + dr[i];
-            int nc = c + dc[i];
-            if(nr>=0 && nr<n && nc>=0 && nc<m && grid[nr][nc]==1 && !vis[nr][nc]) dfs(nr,nc,grid,vis);
-        }
-        return;
+void dfs(int r,int c,vector<vector<int>> &grid,vector<vector<int>> &vis){
+    int n=grid.size();
+    int m=grid[0].size();
+    if(r<0 || c<0 || r>=n || c>=m || vis[r][c] || grid[r][c]==0) return ;
+    vis[r][c]=1;
+    int row[]={0,-1,0,1};
+    int col[]={-1,0,1,0};
+    for(int i=0;i<4;i++){
+        int nr=r+row[i];
+        int nc=c+col[i];
+        dfs(nr,nc,grid,vis);
     }
-    int shortestBridge(vector<vector<int>>& grid) {
-        n = grid.size();
-        m = grid[0].size();
-        int ans = INT_MAX;
-        vector<vector<bool>> vis(n,vector<bool>(m,0));
-        bool flag = false;
-        for(int i = 0;i<n;i++){
-            for(int j = 0;j<m;j++){
-               if(!flag && grid[i][j]==1){
-                   dfs(i,j,grid,vis);
-                   flag = true;
-               } 
-            }
+return;
+}
+int bfs(vector<vector<int>> &vis,vector<vector<int>> &grid){
+    int n=grid.size();
+    int m=grid[0].size();
+    queue<pair<int,int>> q;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(vis[i][j]) q.push({i,j});
         }
-        cout << q.size() << endl;
-        while(!q.empty()){
-            auto it = q.front();
+    }
+    int cnt=0;
+    while(!q.empty()){
+        int a=q.size();
+       
+        while(a--){
+            int r=q.front().first;
+            int c=q.front().second;
             q.pop();
-            int r = it.first.first;
-            int c = it.first.second;
-            int d = it.second;
-            if(!vis[r][c] && grid[r][c]==1){
-                ans = min(ans,d);
-                continue;
-            }
-            for(int i = 0;i<4;i++){
-                int nr = r + dr[i];
-                int nc = c + dc[i];
-                if(nr>=0 && nr<n && nc>=0 && nc<m && !vis[nr][nc]){
-                    if(grid[nr][nc]==0) vis[nr][nc] = 1;
-                    q.push({{nr,nc},d+1});
+             int row[]={0,-1,0,1};
+             int col[]={-1,0,1,0};
+            for(int i=0;i<4;i++){
+                int nr=r+row[i];
+                int nc=c+col[i];
+                if(nr>=0 && nr<n && nc<m && nc>=0 && !vis[nr][nc]){
+                    if(grid[nr][nc]==1) return cnt;
+                    vis[nr][nc]=1;
+                    q.push({nr,nc});
                 }
             }
         }
-        return ans-1;
+        cnt++;
+    }
+    return cnt;
+}
+    int shortestBridge(vector<vector<int>>& grid) {
+        int n=grid.size();
+    int m=grid[0].size();
+    vector<vector<int>> vis(n,vector<int> (m,0));
+      
+      
+      for(int i=0;i<n;i++){
+          for(int j=0;j<m;j++){
+              if(!vis[i][j] && grid[i][j]==1){
+                  dfs(i,j,grid,vis);
+                  return bfs(vis,grid);
+              }
+          }
+      }
+       return -1; 
     }
 };
