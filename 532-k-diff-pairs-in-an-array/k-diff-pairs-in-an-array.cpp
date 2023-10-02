@@ -11,7 +11,7 @@ public:
             return ans;
         }
         set<int> st(nums.begin(),nums.end());
-        for(auto& it : nums) cout << it << " ";
+      //  for(auto& it : nums) cout << it << " ";
         unordered_map<int,int> mp;
         int ans = 0;
         for(auto it : st){
