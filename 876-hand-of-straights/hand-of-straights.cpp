@@ -1,34 +1,28 @@
 class Solution {
 public:
-    bool isNStraightHand(vector<int>& nums, int k) {
-        int n = nums.size();
-        if(n%k) return false;
-        sort(nums.begin(),nums.end());
+    bool isNStraightHand(vector<int>& hand, int gs) {
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
         unordered_map<int,int> mp;
-        for(auto it : nums){
-            mp[it]++;
-        }   
-        int cnt = 0;     
-        int i=  0;
-        while(i<nums.size() && mp.size()>0){
-            if(mp.find(nums[i])!=mp.end()){
-                cnt++;
-                int s = 1;
-                int a = nums[i];
-                int b = k;
-                mp[nums[i]]--;
-                if(mp[nums[i]]==0) mp.erase(nums[i]);
-                while(s<k){
-                    if(mp.find(a+1)==mp.end()) return false;
-                    mp[a+1]--;
-                    if(mp[a+1]==0) mp.erase(a+1);
-                    s++;
-                    a++;
-                }
-            }
-            i++;
+        for(auto& it : hand) mp[it]++;
+        for(auto& it : mp){
+            pq.push({it.first,it.second});
         }
-        if(cnt!=n/k) return false;
-        return true;
+        while(pq.size()>=gs){
+            vector<pair<int,int>> rem;
+            int sz = gs;
+            int last = -1;
+            while(sz && !pq.empty()){
+                auto [a,f] = pq.top();
+                pq.pop();
+                if(last==-1) last = a;
+                else if(a!=last+1) return false;
+                last = a;
+                if(f-1>0) rem.push_back({a,f-1});
+                sz--;
+            } 
+            if(sz) return false;
+            for(auto& it : rem) pq.push(it);      
+        }
+        return pq.empty();
     }
 };
