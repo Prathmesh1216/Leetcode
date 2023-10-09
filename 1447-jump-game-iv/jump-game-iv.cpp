@@ -7,7 +7,6 @@ public:
        for(int i = 0;i<n;i++){
            mp[arr[i]].push_back(i);
        }
-       vector<int> dist(n,123456789);
        queue<pair<int,int>> q;
        vector<bool> vis(n);
        vis[0] = 1;
