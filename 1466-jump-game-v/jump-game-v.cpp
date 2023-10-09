@@ -1,35 +1,28 @@
 class Solution {
 public:
-vector<int> left,right;
-int n;
-int dp[1001];
-int f(int i,vector<int> &arr,int d){
-    if(dp[i]!=-1) return dp[i];
+int f(int idx,vector<int> &arr,int d,vector<int> &dp){
+    if(idx>=arr.size()) return 0;
     int ans=1;
-    for(int j = left[i];j<=right[i];j++){
-        if(j==i) continue;
-        ans = max({ans,1+f(j,arr,d)});
-    } 
-    return dp[i] = ans;
+    if(dp[idx]!=-1) return dp[idx];
+    int a=max(0,idx-d);
+    int ans1=0;
+    for(int i=idx-1;i>=a;i--){
+        if(arr[i]<arr[idx]) ans=max(ans,1+f(i,arr,d,dp));
+        else break;
+    }
+    
+    for(int i=idx+1;i<arr.size() && i<=(idx+d);i++){
+        if(arr[i]<arr[idx]) ans1=max(ans1,1+f(i,arr,d,dp));
+        else break;
+    }
+    
+    return dp[idx]=max(ans,ans1);
 }
     int maxJumps(vector<int>& arr, int d) {
         int ans=0;
-        memset(dp,-1,sizeof(dp));
-        n = arr.size();
-        left.resize(n),right.resize(n);
-        for(int i = 0;i<n;i++) left[i] = i,right[i] = i;
-        for(int i = 0;i<n;i++){
-            for(int j = i+1;j<n;j++){
-                if(arr[j]>=arr[i]) break;
-                right[i] = min({n-1,j,i+d});
-            }
-            for(int j = i-1;j>=0;j--){
-                if(arr[j]>=arr[i]) break;
-                left[i] = max({0,j,i-d});
-            }
-        }
+       vector<int> dp(arr.size(),-1);
         for(int i=0;i<arr.size();i++){
-            ans=max(ans,f(i,arr,d));
+            ans=max(ans,f(i,arr,d,dp));
         }
         return ans;
         
