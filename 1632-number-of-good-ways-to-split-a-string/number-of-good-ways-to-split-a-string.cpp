@@ -1,24 +1,32 @@
 class Solution {
 public:
     int numSplits(string s) {
+        vector<bool> v(26);
         int n = s.length();
-        map<char,int> mp;
-        vector<int> dl(n);
-        vector<int> dr(n);
+        vector<int> ldis(n);
+        vector<int> rdis(n);
         int cnt = 0;
         for(int i = 0;i<n;i++){
-            mp[s[i]]++;
-            dl[i] = mp.size();
+            if(!v[s[i]-'a']){
+                cnt ++;
+                v[s[i]-'a'] = 1;
+            }
+            ldis[i] = cnt;
         }
-        mp.clear();
-        mp[s[n-1]]++;
-        for(int i = n-2;i>=0;i--){
-            dr[i] = mp.size();
-            mp[s[i]]++;
+        vector<bool> v1(26);
+        cnt = 0;
+        for(int i = n-1;i>=0;i--){
+            rdis[i] = cnt;
+            if(!v1[s[i]-'a']){
+                v1[s[i]-'a'] = 1;
+                cnt++;
+            }
         }
-        for(int i = 0;i<n-1;i++){
-            if(dl[i]==dr[i]) cnt++;
+        int ans = 0;
+        for(int i = 0;i<n;i++){
+           // cout << ldis[i] << " " << rdis[i] << endl;
+            if(ldis[i]==rdis[i]) ans++;
         }
-        return cnt;
+        return ans;
     }
 };
