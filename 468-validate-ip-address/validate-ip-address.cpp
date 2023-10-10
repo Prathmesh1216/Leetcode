@@ -1,6 +1,6 @@
 class Solution {
 public:
-  bool ipv4(string& s){
+      bool ipv4(string& s){
     int n = s.length();
     int dc = 0;
     vector<string> v;
