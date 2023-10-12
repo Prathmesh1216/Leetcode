@@ -6,7 +6,7 @@ public:
        queue<pair<int,int>> q;
        vector<bool> vis(n,0);
        vector<int> dist(n,-1);
-       dist[node] = 0;
+       dist[node] = 1;
        vis[node] = true;
        q.push({node,-1});
        int ans = INT_MAX;
@@ -21,7 +21,7 @@ public:
                    q.push({it,child});
                }
                else if(it!=par){
-                   ans = min(ans,dist[it]+dist[child]+1);
+                   ans = min(ans,dist[it]+dist[child]-1);
                }
            }
        }
