@@ -15,7 +15,7 @@ public:
         int start = 0;
         int end = n-1;
         int peak = -1;
-        cout << start << "->" << end << endl;
+       // cout << start << "->" << end << endl;
         while(start<=end){
             int mid = start + (end-start)/2;
             if(mid==0){
@@ -38,7 +38,7 @@ public:
             }
             else start = mid + 1;
         }
-        cout << peak << endl;
+      //  cout << peak << endl;
         start = 0;
         end = peak;
         while(start<=end){
