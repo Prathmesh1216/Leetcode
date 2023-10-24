@@ -1,29 +1,28 @@
 class Solution {
 public:
-    vector<vector<int>> adj;
-    bool dfs(int node,vector<bool>& vis,vector<bool>& dfsvis){
-        vis[node] = 1;
-        dfsvis[node] = 1;
-        bool flag = false;
-        for(auto& it : adj[node]){
-            if(!vis[it]) flag|=dfs(it,vis,dfsvis);
-            else if(dfsvis[it]){
-                flag = true;
+    bool canFinish(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> g(n);
+        vector<int> indegree(n);
+        for(auto& it : edges){
+            g[it[0]].push_back(it[1]);
+            indegree[it[1]]++;
+        }
+        vector<int> topo;
+        queue<int> q;
+        for(int i = 0;i<n;i++){
+            if(indegree[i]==0) q.push(i),topo.push_back(i);
+        }
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            for(auto& it : g[node]){
+                indegree[it]--;
+                if(indegree[it]==0){
+                    q.push(it);
+                    topo.push_back(it);
+                }
             }
         }
-        dfsvis[node] = 0;
-        return flag;
-    }
-    bool canFinish(int n, vector<vector<int>>& prerequisites) {
-        adj.resize(n);
-        for(auto& it : prerequisites){
-            adj[it[0]].push_back(it[1]);
-        }
-        bool flag = false;
-        vector<bool> vis(n),dfsvis(n);
-        for(int i = 0;i<n;i++){
-            if(!vis[i]) flag |= dfs(i,vis,dfsvis);
-        }
-        return !flag;
+        return topo.size()==n;
     }
 };
