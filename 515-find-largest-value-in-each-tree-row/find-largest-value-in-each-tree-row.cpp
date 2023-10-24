@@ -13,20 +13,17 @@ class Solution {
 public:
     vector<int> largestValues(TreeNode* root) {
         if(!root) return {};
-        int level = 0;
-        int cl = 0;
-        queue<TreeNode*> q;
         vector<int> ans;
+        queue<TreeNode*> q;
         q.push(root);
         while(!q.empty()){
-            int n = q.size();
             int maxi = INT_MIN;
-            while(n--){
-                TreeNode* node = q.front();
-                q.pop();
-                maxi = max(maxi,node->val);
-                if(node->right) q.push(node->right);
-                if(node->left) q.push(node->left);
+            int a = q.size();
+            while(a--){
+                TreeNode* temp = q.front(); q.pop();
+                maxi = max(maxi,temp->val);
+                if(temp->left) q.push(temp->left);
+                if(temp->right) q.push(temp->right);
             }
             ans.push_back(maxi);
         }
