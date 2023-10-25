@@ -1,81 +1,102 @@
 class Solution {
 public:
-    vector<vector<int>> ft;
-    vector<vector<int>> dis;
-    int n,m;
-    vector<int> dr = {-1,0,1,0};
-    vector<int> dc = {0,-1,0,1};
-    bool isValid(int r,int c){
-        if(r>=0 && r<n && c>=0 && c<m) return true;
-        return false;
-    }
-    bool isvalid(int mid,vector<vector<int>>& grid){
-        queue<vector<int>> pq;
-        pq.push({0,0,mid});
-        vector<vector<int>> vis(n,vector<int>(m,0));
-        while(!pq.empty()){
-            auto it = pq.front();
-            pq.pop();
-            int r = it[0];
-            int c = it[1];
-            if(r==n-1 && c==m-1) return true;
-            int time = it[2];
-            vis[r][c] = 1;
-            for(int i = 0;i<4;i++){
-                int nr = r + dr[i];
-                int nc = c + dc[i];
-                if(isValid(nr,nc) && grid[nr][nc]!=2 && !vis[nr][nc] && (time+1<ft[nr][nc] || (nr==n-1 && nc==m-1 && time+1<=ft[nr][nc]))) pq.push({nr,nc,time+1});
-            }
+    int dr[5] = {0, 1, 0, -1, 0};
 
-        }
-        return false;
-
+    bool isValid(int n,int m,int x,int y){
+        if(x >= n || y >= m || x < 0 || y < 0)
+            return false;
+        return true;
     }
+
     int maximumMinutes(vector<vector<int>>& grid) {
-        n = grid.size();
-        m = grid[0].size();
-        queue<pair<int,int>> pq;
-        ft.resize(n,vector<int>(m,INT_MAX-1));
-        for(int i = 0;i<n;i++){
-            for(int j = 0;j<m;j++){
-                if(grid[i][j]==1){
-                    pq.push({i,j});
-                    ft[i][j] = 0;
+
+        //for each tile get the earliest time fire will reach it using BFS
+        int n = grid.size();
+        int m = grid[0].size();
+
+        vector<vector<int>> fireTime (n,vector<int> (m,INT_MAX));
+        vector<vector<bool>> vis (n,vector<bool> (m));
+
+        queue<pair<int,int>> q;
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j] == 1){
+                    q.push({i,j});
+                    vis[i][j] = 1;
+                    fireTime[i][j] = 0;
+                }
+                else if(grid[i][j] == 2){
+                    //marking wall as visited so we don't push it to queue
+                    vis[i][j] = 1;
                 }
             }
-        }
-        while(!pq.empty()){
-            auto it = pq.front();
-            int r = it.first;
-            int c = it.second;
-            pq.pop();
-            for(int i = 0;i<4;i++){
-                int nr = r + dr[i];
-                int nc = c + dc[i];
-                if(isValid(nr,nc) && grid[nr][nc]!=2 && ft[nr][nc]>ft[r][c]+1){
-                    ft[nr][nc] = 1 + ft[r][c];
-                    pq.push({nr,nc});
+        } 
+
+        while(!q.empty()){
+            pair<int,int> cell = q.front();
+            q.pop();
+            int x = cell.first;
+            int y = cell.second;
+            for(int i=0;i<4;i++){
+                if(isValid(n, m, x + dr[i], y + dr[i+1]) && !vis[x+dr[i]][y+dr[i+1]]){
+                    fireTime[x+dr[i]][y+dr[i+1]] = fireTime[x][y] + 1;
+                    vis[x+dr[i]][y+dr[i+1]] = 1;
+                    q.push({x+dr[i],y+dr[i+1]});
                 }
             }
-        }
-        // for(int i = 0;i<n;i++){
-        //     for(int j = 0;j<m;j++){
-        //         cout << ft[i][j] << " " ;
-        //     }
-        //     cout << endl;
-        // }
-        int start = 0;
-        int end = 1e9;
-        int ans = -1;
-       // if(isvalid(1e9,grid)) return 1e9;
-        while(start<=end){
-            int mid = start + (end-start)/2;
-            if(isvalid(mid,grid)){
-                ans = mid;
-                start = mid + 1;
+        }  
+
+        auto check = [&](int time) {
+
+            vector<vector<bool>> visDFS (n,vector<bool> (m));
+
+            for(int i=0;i<n;i++){
+                for(int j=0;j<m;j++){
+                    if(grid[i][j] == 2){
+                        //marking walls as visited 
+                        visDFS[i][j] = 1;
+                    }
+                }
             }
-            else end = mid - 1;
+
+            //try out all paths with DFS
+            function<bool(int,int,int)> dfs = [&](int x,int y,int fireTimeFromOrigin) {
+                if(x == n-1 && y == m-1) {
+                    // first check if reached or not then check for fire
+                    if(fireTime[x][y] >= time + fireTimeFromOrigin)
+                        return true;
+                    return false;
+                }
+                if(fireTime[x][y] <= time + fireTimeFromOrigin) return false;;
+                visDFS[x][y] = 1;
+                bool result = 0;
+                for(int i=0;i<4;i++){
+                    if(isValid(n, m, x + dr[i], y + dr[i+1]) && !visDFS[x+dr[i]][y+dr[i+1]]){
+                        result |= dfs(x+dr[i],y+dr[i+1], fireTimeFromOrigin + 1);
+                    }
+                }
+                return result;
+            };
+            
+            return dfs(0,0,0);
+        };
+
+        //binary search on time stayed
+        int l = 0;
+        int r = 1e9;
+        int maxTime = -1;
+        while(r >= l){
+            int mid = l + (r - l) / 2;
+            if(check(mid)){
+                maxTime = mid;
+                l = mid + 1;
+            }
+            else{
+                r = mid - 1;
+            }
         }
-        return ans;
+
+        return maxTime;
     }
 };
