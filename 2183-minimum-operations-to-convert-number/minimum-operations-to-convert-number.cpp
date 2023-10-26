@@ -9,27 +9,16 @@ public:
         queue<pii> q;
         q.push({start,0});
         vector<int> vis(1001);
-        vis[start] = 1;
         while(!q.empty()){
             int node = q.front().first;int steps = q.front().second; q.pop();
             if(node==target) return steps;
             if(node<0 || node>1000) continue;
+            if(vis[node]) continue;
+            vis[node] = 1;
             for(int i = 0;i<nums.size();i++){
-                if(inr(nums[i]+node) && !vis[nums[i]+node]){
-                    vis[nums[i]+node] = 1;
                     q.push({nums[i]+node,steps+1});
-                }
-                if(inr(-nums[i]+node) && !vis[-nums[i]+node]){
-                    vis[-nums[i]+node] = 1;
                     q.push({-nums[i]+node,steps+1});
-                }
-                if(inr(nums[i]^node) && !vis[nums[i]^node]){
-                    vis[nums[i]^node] = 1;
                     q.push({nums[i]^node,steps+1});
-                }
-                if(!inr(nums[i]+node) && (nums[i]+node) ==target) return steps+1;
-                if(!inr(-nums[i]+node) && (node-nums[i])==target) return steps+1;
-                if(!inr(nums[i]^node) && (nums[i]^node) == target) return steps+1;
             }
         }
         return -1;
