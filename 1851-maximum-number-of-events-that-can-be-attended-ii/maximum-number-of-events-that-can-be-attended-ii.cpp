@@ -20,7 +20,6 @@ public:
     }
     int solve(int i,int k,vector<vector<int>>& events,vector<vector<int>>& dp){
         if(i==n || k==0) return 0;
-        if(i==n-1) return events[i][2];
         if(dp[i][k]!=-1) return dp[i][k];
         int ans = solve(i+1,k,events,dp);
         int ans2 = 0;
