@@ -1,7 +1,7 @@
 class Solution {
 public:
     int n,m;
-    int dp[71][70*70*70+1];
+    int dp[71][70*70+1];
     int solve(int i,int sum,int target,vector<vector<int>>& mat){
         if(i>=n){
             return abs(target-sum);
