@@ -1,56 +1,107 @@
-class Solution {
+ class Solution
+{
+private:
+    bool valid_ipv4(string str)
+    {
+        int count = 0; // to count no of dots
+        int temp_size = 0;
+        char prev = '\0';
+        int i = 0;
+        while (i < str.size())
+        {
+            char ch = str[i];
+            string temp = "";
+            temp_size = 0;
+            while (i < str.size() && str[i] != '.')
+            {
+                temp_size++;
+                ch = str[i];
+                if (!(ch >= '0' && ch <= '9'))
+                    return false;
+                temp += ch;
+                i++;
+            }
+            if (str[i] == '.' && i == str.size() - 1)
+                return false;
+            i++;
+            if ((temp_size == 0) || temp_size > 3 || temp[0] == '0' && temp_size > 1)
+            {
+                return false;
+            }
+            count++;
+            int value = stoi(temp);
+            if (value < 0 || value > 255) // check the value of part
+                return false;
+        }
+        if (count - 1 == 3)
+            return true;
+
+
+        return false;
+    }
+    bool valid_ipv6(string str)
+    {
+        int count = 0;
+        int temp_size = 0;
+        int i = 0;
+        while (i < str.size())
+        {
+            char ch = str[i];
+            string temp = "";
+            temp_size = 0;
+            while (i < str.size() && str[i] != ':')
+            {
+                temp_size++;
+                ch = str[i];
+                if (!(ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F'))
+                    return false;
+                temp += ch;
+                i++;
+            }
+            if (str[i] == ':' && i == str.size() - 1)
+                return false;
+            i++;
+            if (temp_size < 1 || temp_size > 4)
+            {
+                return false;
+            }
+            count++;
+        }
+
+
+        if (count - 1 == 7)
+            return true;
+        return false;
+    }
+
+
 public:
-      bool ipv4(string& s){
-    int n = s.length();
-    int dc = 0;
-    vector<string> v;
-    string temp = "";
-    for(int i = 0;i<s.length();i++){
-      if(s[i]!='.' && !isdigit(s[i])) return false;
-      if(s[i]=='.'){
-        dc++;
-        if(temp.size()==0 || temp.size()>3) return false;
-        if(temp[0]=='0' && temp.size()!=1) return false;
-        v.push_back(temp);
-        temp = "";
-      }
-      else temp += s[i];
-    }
-    if(dc!=3) return false;
-    if(temp.size()==0 || temp.size()>3) return false;
-    if(temp[0]=='0' && temp.size()!=1) return false;
-    v.push_back(temp);
-    if(v.size()!=4) return false;
-    for(auto& it : v){
-      if(stoi(it)>255) return false;
-      else if(it.length()>1 && stoi(it)==0) return false;
-    }
-    return true;
-  }
-  bool ipv6(string& s){
-    int n = s.length();
-    int dc = 0;
-    vector<string> v;
-    string temp = "";
-    for(int i = 0;i<s.length();i++){
-      if(s[i]!=':' && !(s[i]>='0'&&s[i]<='9') && !(s[i]>='a'&&s[i]<='f') && !(s[i]>='A'&&s[i]<='F')) return false;
-      if(s[i]==':'){
-        dc++;
-        if(temp.size()==0 || temp.size()>4) return false;
-        v.push_back(temp);
-        temp = "";
-      }
-      else temp += s[i];
-    }
-    if(dc!=7) return false;
-    if(temp.size()==0 || temp.size()>4) return false;
-    v.push_back(temp);
-    if(v.size()!=8) return false;
-    return true;
-  }
-    string validIPAddress(string& s) {
-        if(ipv4(s)) return "IPv4";
-        else if(ipv6(s)) return "IPv6";
-        return "Neither";
+    string validIPAddress(string str)
+    {
+        bool ipv4 = false;
+        bool ipv6 = false;
+        int ret = str.find('.');
+        if (ret >= 0 && ret <= str.size())
+        {
+            ipv4 = valid_ipv4(str);
+        }
+        else
+        {
+            ipv6 = valid_ipv6(str);
+        }
+        if (ipv4)
+        {
+
+            return "IPv4";
+        }
+        else if (ipv6)
+        {
+
+            return "IPv6";
+        }
+        else
+        {
+            return "Neither";
+        }
     }
 };
