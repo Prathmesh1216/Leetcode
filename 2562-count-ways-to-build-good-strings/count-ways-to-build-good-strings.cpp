@@ -13,11 +13,7 @@ public:
     int countGoodStrings(int low, int high, int zero, int one) {
         memset(dp,-1,sizeof(dp));
         long long ans1 = solve(high,zero,one);
-      //  cout << ans1 << endl;
-
-        memset(dp,-1,sizeof(dp));
         long long ans2 = solve(low-1,zero,one);
-       // cout << ans2 << endl;
         return (ans1-ans2)%m;
     }
 };
