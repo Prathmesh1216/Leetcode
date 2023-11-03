@@ -3,7 +3,7 @@ public:
     bool isValid(int mid,vector<int>& nums,int ts){
         int sum = 0;
         for(int i = 0;i<nums.size();i++){
-            sum += (nums[i]/mid + (nums[i]%mid!=0));
+            sum += ceil((float)nums[i]/mid);
         }
         return sum<=ts;
     }
