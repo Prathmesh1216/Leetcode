@@ -15,7 +15,7 @@ public:
     long long maxRunTime(int n, vector<int>& batteries) {
         sort(batteries.begin(),batteries.end());
         long long start = 0;
-        long long end =  accumulate(batteries.begin(),batteries.end(),0ll);
+        long long end =  accumulate(batteries.begin(),batteries.end(),0ll)/n;
         long long ans = -1;
         while(start<=end){
             long long mid = start + (end-start)/2;
