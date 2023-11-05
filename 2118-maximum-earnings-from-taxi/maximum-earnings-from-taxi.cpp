@@ -1,33 +1,31 @@
 class Solution {
 public:
-    long long dp[100001];
-    long long recur(vector<vector<int>>&rides,int nn,int idx)
-    {
-        if(idx>=nn)
-            return 0;
-        if(dp[idx]!=-1) return dp[idx];
-        int start = idx;
+    int lb(int s,int val,vector<vector<int>>& rides){
+        int start = s;
         int end = rides.size()-1;
-        int i = rides.size();
+        int ans = end+1;
         while(start<=end){
             int mid = start + (end-start)/2;
-            if(rides[mid][0]>=rides[idx][1]){
-                i = mid;
+            if(rides[mid][0]>=val){
+                ans = mid;
                 end = mid - 1;
             }
             else start = mid + 1;
         }
-       // if(i==-1) return dp[idx] = recur(rides,nn,idx+1);
-        long long op1=recur(rides,nn,idx+1);
-        long long op2=rides[idx][1]-rides[idx][0]+rides[idx][2]+recur(rides,nn,i);
-        
-        return dp[idx] = max(op1,op2);
+        return ans;
+    }
+    long long dp[100001];
+    long long solve(int i,vector<vector<int>>& rides){
+        if(i>=rides.size()) return 0;
+        if(dp[i]!=-1) return dp[i];
+        long long ans1 = solve(i+1,rides);
+        int j = lb(i+1,rides[i][1],rides);
+        long long ans2 = rides[i][1] - rides[i][0] + rides[i][2] + solve(j,rides);
+        return dp[i] = max(ans1,ans2);
     }
     long long maxTaxiEarnings(int n, vector<vector<int>>& rides) {
-        memset(dp,-1,sizeof(dp));
         sort(rides.begin(),rides.end());
-        int nn=rides.size();
-        
-        return recur(rides,nn,0);
+        memset(dp,-1,sizeof(dp));
+        return solve(0,rides);
     }
 };
