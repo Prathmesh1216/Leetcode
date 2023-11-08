@@ -13,6 +13,8 @@ public:
         return ans;
     }
     int minimumMoves(vector<vector<int>>& grid) {
+        ios_base:: sync_with_stdio(false);
+        cin.tie(NULL);
         vector<vector<int>> v;
         vector<vector<int>> garib;
         for(int i = 0;i<3;i++){
