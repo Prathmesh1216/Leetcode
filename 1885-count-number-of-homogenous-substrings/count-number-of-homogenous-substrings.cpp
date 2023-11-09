@@ -2,16 +2,18 @@ class Solution {
 public:
     int countHomogenous(string s) {
         long long ans = 0;
-        long long cnt = 0;
-        for(int i = 0;i<s.length();i++){
-            if(i!=0 && s[i]!=s[i-1]){
-                ans += (cnt*(cnt+1)/2);
-                cnt = 0;
+        char last = s[0];
+        long long cnt = 1;
+        const int m = 1e9+7;
+        for(int i = 1;i<s.length();i++){
+            if(s[i]!=last){
+                ans += (cnt*(cnt+1)/2)%m;
+                last = s[i];
+                cnt = 1;
             }
-            cnt++;
-
+            else cnt++;
         }
-        ans += (cnt*(cnt+1)/2);
-        return ans%1000000007;
+        ans += (cnt*(cnt+1)/2)%m;
+        return ans;
     }
 };
