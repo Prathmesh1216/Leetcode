@@ -2,8 +2,8 @@ class Solution {
 public:
     vector<vector<int>> moves = {{-1,0},{0,-1},{1,0},{0,1}};
     int n,m;
-    bool isValid(int r,int c){
-        if(r<0 || r>=n || c<0 || c>=m) return false;
+    bool isValid(int r,int c,int nr,int nc,vector<vector<int>>& matrix){
+        if(nr<0 || nr>=n || nc<0 || nc>=m || matrix[nr][nc]<=matrix[r][c]) return false;
         return true;
     }
     int dp[201][201];
@@ -12,7 +12,7 @@ public:
         if(dp[r][c]!=-1) return dp[r][c];
         for(auto& it : moves){
             int nr = r + it[0],nc = c + it[1];
-            if(isValid(nr,nc) && matrix[nr][nc]>matrix[r][c]) ans = max(ans,1+solve(nr,nc,matrix));
+            if(isValid(r,c,nr,nc,matrix)) ans = max(ans,1+solve(nr,nc,matrix));
         }
         return dp[r][c] = ans;
     }
